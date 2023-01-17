@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>책상 배치 프로그램</title>
+    <style>
+        table {
+            border : 4px solid black
+        }
+        td {
+            width: 200px;
+            height: 100px;
+            border : 1px solid black;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <span>생성할 책상의 갯수를 입력하세요</span>
+
+    <button id="width">행(세로) 입력</button>
+    <button id="height">열(가로) 입력</button>
+    <button id="btn">생성하기</button>
+
+    <script type="text/javascript">
+
+    function popall(arr) {
+        while(arr.length > 0) {
+            arr.pop()
+        }
+    }
+
+    function checknum_() {
+        noempty = 0
+
+        for (i=0 ; i<currenttrnum ; i++) {
+            for (j=0 ; j<currenttdnum ; j++) {
+                if (data[i][j].innerText != "-") {
+                    noempty += 1
+                }
+            }
+        }
+        checknum = noempty
+    }
+
+    let table = document.createElement('table');
+    let thead = document.createElement('thead');
+    let tbody = document.createElement('tbody');
+
+    let createtr = document.createElement('tr');
+    let createtd = document.createElement('td');
+
+    let width_ = document.getElementById('width')
+    let height_ = document.getElementById('height')
+    let btn_1 = document.querySelector("#btn")
+    
+    let widthbuttonclick = 0
+    let heightbuttonclick = 0
+    let createbuttonclick = 0
+
+    let row = []
+    let data = []
+
+    let currenttrnum = 0;
+    let currenttdnum = 0;
+
+    checknum = 0
+
+    width_.addEventListener("click", () => {
+        trnum = Number(prompt("행의 개수를 입력하세요."))
+        widthbuttonclick = 1
+    })
+    height_.addEventListener("click", () => {
+        tdnum = Number(prompt("열의 개수를 입력하세요."))
+        heightbuttonclick = 1
+    })
+    btn_1.addEventListener("click", () => {
+
+        if (widthbuttonclick == 0) {
+            if (heightbuttonclick == 0) {
+                alert("먼저 행과 열의 개수를 입력하세요.")
+            }
+        }
+        if (widthbuttonclick == 1) {
+            if (heightbuttonclick == 1) {
+                alert("책상이 생성되었습니다.")
+
+                if (createbuttonclick >= 1) {
+                    const appendrowbutton = document.getElementById("appendrow");
+                    const appenddatabutton = document.getElementById("appenddata");
+                    const delappenddrowbutton = document.getElementById("delappendrow");
+                    const delappenddatabutton = document.getElementById("delappenddata");
+                    const namebutton = document.getElementById("namebutton");
+                    const br = document.getElementById('br')
+
+                    appendrowbutton.remove();
+                    appenddatabutton.remove();
+                    delappenddatabutton.remove();
+                    delappenddrowbutton.remove();
+                    namebutton.remove();
+                    br.remove();
+
+                    for (i=currenttrnum-1 ; i>=0 ; i--) {
+                        row[i].remove();
+                        row.pop();
+                        for (j=currenttdnum-1 ; j>=0 ; j--) {
+                            data[i][j].remove();
+                        }
+                        data.pop()
+                    }
+
+                    checknum = 0
+                }
+
+                createbuttonclick += 1;
+
+                document.body.appendChild(table)
+
+                let br = document.createElement('br');
+                br.id = 'br';
+
+                let basictext = document.createTextNode('a');
+
+                let appendrow = document.createElement("button");
+                let appendrowtext = document.createTextNode('클릭하여 뒤에 행 추가');
+                appendrow.id = 'appendrow';
+                appendrow.appendChild(appendrowtext);
+                document.body.append(appendrow);
+                                
+                appendrowbutton = document.getElementById('appendrow')
+
+                appendrowbutton.addEventListener("click", () => {
+                    if (createbuttonclick >= 1) {
+                        newtr = document.createElement("tr");
+                        newtr.id = `tr${currenttrnum}`
+                        row[currenttrnum] = newtr
+                        table.appendChild(newtr)
+                        let data_imsi = []
+                        for (i=0 ; i<currenttdnum ; i++) {
+                            newtd = document.createElement("td")
+                            newtd.id = `tr${currenttrnum}_td${i}`
+                            newtd.appendChild(document.createTextNode("-"))
+                            newtr.appendChild(newtd)
+                            data_imsi[i] = newtd
+                        }
+                        data.push(data_imsi)
+                        currenttrnum += 1
+                    }
+                })
+
+                let appenddata = document.createElement("button");
+                let appenddatatext = document.createTextNode('클릭하여 뒤에 열 추가');
+                appenddata.id = 'appenddata';
+                appenddata.appendChild(appenddatatext);
+                document.body.append(appenddata);
+                
+                appenddatabutton = document.getElementById('appenddata')
+
+                appenddatabutton.addEventListener("click", () => {
+                    if (createbuttonclick >= 1) {
+                        for(i=0 ; i<currenttrnum ; i++) {
+                            let newtr = document.getElementById(`tr${i}`)
+                            newtd = document.createElement("td")
+                            newtd.id = `tr${i}_td${currenttdnum}`
+                            newtd.appendChild(document.createTextNode("-"))
+                            newtr.appendChild(newtd)
+                            data[i][currenttdnum] = newtd
+                        }
+                        currenttdnum += 1;
+                    }
+                })
+
+                let delappendrow = document.createElement("button");
+                let delappendrowtext = document.createTextNode('클릭하여 뒤에 행 삭제');
+                delappendrow.id = 'delappendrow';
+                delappendrow.appendChild(delappendrowtext);
+                document.body.append(delappendrow);
+
+                delappenddrowbutton = document.getElementById('delappendrow')
+
+                delappenddrowbutton.addEventListener("click", () => {
+                    if (createbuttonclick >= 1) {
+                        if (currenttrnum >= 1) {
+                            row[currenttrnum-1].remove()
+                            row.pop()
+                            for (i=0 ; i<currenttdnum ; i++) {
+                                data[currenttrnum-1][i].remove()
+                            }
+                            data.pop()
+                            currenttrnum -= 1
+                            checknum_()
+                        }
+                    }
+                })
+
+                let delappenddata = document.createElement("button");
+                let delappenddatatext = document.createTextNode('클릭하여 뒤에 열 삭제');
+                delappenddata.id = 'delappenddata';
+                delappenddata.appendChild(delappenddatatext);
+                document.body.append(delappenddata);
+
+                delappenddatabutton = document.getElementById('delappenddata')
+
+                delappenddatabutton.addEventListener("click", () => {
+                    if (createbuttonclick >= 1) {
+                        if (currenttdnum >= 1) {
+                            for(i=0 ; i<currenttrnum ; i++) {
+                                data[i][currenttdnum-1].remove()
+                                data[i].pop()
+                            }
+                            currenttdnum -= 1
+                            checknum_()
+                        }
+                    }
+                })
+
+                for (i=0 ; i<trnum ; i++){
+                    currenttrnum = trnum;
+
+                    row[i] = document.createElement('tr')
+                    row[i].id = `tr${i}`
+
+                    table.appendChild(row[i])
+                    let data_imsi = []
+                    for (j=0 ; j<tdnum ; j++) {
+                        currenttdnum = tdnum
+
+                        data_imsi[j] = document.createElement('td')
+                        data_imsi[j].id = `tr${i}_td${j}`
+                        data_imsi[j].appendChild(document.createTextNode("-"))
+
+                        row[i].appendChild(data_imsi[j])
+                    }
+                    data.push(data_imsi)
+                }
+
+                document.body.appendChild(br);
+
+                let names = []
+                let namebutton = document.createElement('button');
+                let namebuttontext = document.createTextNode('이름을 추가하려면 클릭')
+                namebutton.id = 'namebutton'
+                namebutton.appendChild(namebuttontext);
+                document.body.append(namebutton)
+                namebutton.addEventListener("click", () => {
+                    name = prompt("추가할 이름을 입력하세요")
+                    check = 0
+                    if (name != '-' && name != '' && name != null && name != "null") {
+                        while(check == 0) {
+                            if (checknum != currenttrnum*currenttdnum) {
+                                i = Math.floor(Math.random()*currenttrnum)
+                                j = Math.floor(Math.random()*currenttdnum)
+                                inserttd = document.getElementById(`tr${i}_td${j}`)
+                                text = inserttd.innerText
+                                if (text == "-"){
+                                    inserttd.innerText = name
+                                    check = 1
+                                    checknum_()
+                                }
+                            }
+                            if (checknum == currenttrnum*currenttdnum) {
+                                check = 1
+                            }
+                        }
+                    }
+                })
+            }
+        }
+    })
+    </script>
+</body>
+</html>
